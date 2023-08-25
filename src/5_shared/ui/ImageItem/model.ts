@@ -1,7 +1,17 @@
-import { previewURLT } from "5_shared/models";
+import { Image } from "5_shared/models";
 import { SyntheticEvent } from "react";
 
-export type Props = {
-	data: previewURLT | ArrayBuffer;
-	onClose?: (e: SyntheticEvent, item: previewURLT | ArrayBuffer) => void;
-};
+type dragFn = (e: DragEvent) => void;
+
+export interface Props extends React.HTMLProps<HTMLDivElement> {
+	image: Image;
+	onClose?: (e: SyntheticEvent, item: Image) => void;
+	// onDragStart?: dragFn;
+	// onDragLeave?: dragFn;
+	// onDragOver?: dragFn;
+	// onDragEnd?: dragFn;
+	// onDrop?: dragFn;
+	// draggable?: boolean;
+}
+
+//extends React.HTMLProps<HTMLElement>

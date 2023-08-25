@@ -1,6 +1,6 @@
-import { PreviewArray, previewURLT } from "5_shared/models";
+import { Image, FilesArray } from "5_shared/models";
 
 export type Props = {
-	data?: ArrayBuffer[] | previewURLT[];
-	returnImages?: (items: PreviewArray) => void;
+	data?: Image[];
+	returnImages?: (items: FilesArray) => void;
 };

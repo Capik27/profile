@@ -2,13 +2,19 @@ import {
 	descriptionT,
 	titleT,
 	Post,
-	previewURLT,
-	PreviewArray,
+	FilesArray,
+	previewNameT,
 } from "5_shared/models";
+import { DocumentData } from "firebase/firestore";
+
+export type changedData = {
+	orderedFiles: FilesArray;
+	delete: previewNameT[];
+};
 
 export type changePostFn = (
-	post: Post,
+	post: Post | DocumentData,
 	title: titleT,
 	description: descriptionT,
-	previews: PreviewArray | previewURLT[]
+	previews: changedData
 ) => void;

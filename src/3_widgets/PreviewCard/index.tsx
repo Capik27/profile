@@ -11,8 +11,8 @@ const PreviewCard: React.FC<Props> = ({ data }) => {
 			<CardMedia
 				component="img"
 				height="200"
-				image={data.previewUrls[0]}
-				alt={data.previewNames[0]}
+				image={data.images[0].url}
+				alt={data.images[0].name}
 			/>
 			<CardContent>
 				<Typography gutterBottom variant="h5" component="div">

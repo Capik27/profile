@@ -13,13 +13,23 @@ export type pathT = string;
 //////////////////////////////////////////////
 
 export type Preview = File;
-export type PreviewArray = Preview[];
+export type DataURL = previewURLT | ArrayBuffer;
+export type FilesArray = (Preview | Image)[];
+
+export type TypedFile = File & { id: uniqueID };
+export type TypedImage = Image & { type: "image"; id: uniqueID };
+export type ExportedFilesArray = (TypedFile | TypedImage)[];
 
 export interface Post {
 	id: uniqueID;
 	title: titleT;
 	description: descriptionT;
-	previewUrls: previewURLT[];
-	previewNames: previewNameT[];
+	images: Image[];
 	createdAt: createdAtT;
+}
+
+export interface Image {
+	id: uniqueID;
+	name: previewNameT;
+	url: DataURL;
 }
