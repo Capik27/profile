@@ -1,26 +1,20 @@
 import Editor from "3_widgets/Editor";
-import downloadPost from "5_shared/api/firestore/download/post";
-import useFirstData from "5_shared/hooks/useFirstData";
-import { DocumentData } from "firebase/firestore";
-import { useState, useEffect, useCallback } from "react";
+// import NotFound from "4_features/NotFound/NotFound";
+import useFindPost from "5_shared/hooks/useFindPost";
+import { ERROR_ROUTE } from "5_shared/router/paths";
+import { Navigate, useParams } from "react-router-dom";
 
 const EditPage: React.FC = () => {
-	const data = useFirstData();
+	const { id } = useParams();
+	const post = useFindPost(id ?? "");
 
-	const ff = data?.length ? data[0] : undefined;
-	console.log("createPage ", data);
-	// const [data, setData] = useState<DocumentData | undefined>(undefined);
-	//1691856192860
-	// useEffect(() => {
-	// 	downloadPost("1691856192860").then((result) => {
-	// 		if (result) {
-	// 			console.log("response", result);
-	// 			setData(result);
-	// 		}
-	// 	});
-	// }, []);
+	if (!post) return <Navigate to={ERROR_ROUTE} replace={true} />;
 
-	return <>{ff && <Editor data={ff} />}</>;
+	return (
+		<>
+			<Editor data={post} />
+		</>
+	);
 };
 
 export default EditPage;

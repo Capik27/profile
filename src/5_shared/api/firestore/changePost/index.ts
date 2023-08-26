@@ -24,6 +24,8 @@ const changePost: changePostFn = async (
 	const delItemsNames = changedData.delete;
 	const orderedFiles = changedData.orderedFiles;
 
+	// console.log("changedData", changedData);
+
 	if (delItemsNames.length) {
 		delItemsNames.forEach((itemName) => {
 			deletePreview(id, itemName);
@@ -64,21 +66,6 @@ const changePost: changePostFn = async (
 			url,
 		};
 	});
-
-	// const [oldLength, newLength] = [post.images.length, previews.length];
-	// if (typeof previews[0] != "string") {
-	// 	const names: string[] | File[] = post.previewNames;
-	// 	names.forEach(async (itemName, index) => {
-	// 		deletePreview(id, itemName);
-	// 		const url = await uploadPreview(id, previews[index] as File);
-	// 		previewUrls.push(url);
-	// 		previewNames.push((previews[index] as File).name);
-	// 	});
-
-	// 	// deletePreview(id, previewName);
-	// 	// previewURL = await uploadPreview(id, preview);
-	// 	// previewName = preview.name;
-	// }
 
 	const changedPost = {
 		...post,

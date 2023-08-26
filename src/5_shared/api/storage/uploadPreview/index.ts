@@ -7,7 +7,6 @@ const uploadPreview: uploadPreviewFn = async (id, preview) => {
 	const storageRef = ref(storage, path);
 
 	const res = await uploadBytes(storageRef, preview);
-	console.log("uploadBytes", res);
 	return await getDownloadURL(storageRef);
 };
 

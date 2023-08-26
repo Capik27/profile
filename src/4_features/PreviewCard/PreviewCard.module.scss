@@ -1,0 +1,32 @@
+%onerow {
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    display: box;
+    word-wrap: break-word;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+
+    -ms-line-clamp: 1;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+}
+
+.onerow {
+    @extend %onerow;
+}
+
+.title {
+    @extend %onerow;
+    margin: 0;
+    letter-spacing: 1px;
+    font-weight: 900;
+    // color: #1f10101a;
+    -webkit-text-stroke: 1px #000000;
+
+    background: linear-gradient(to right, #00000070, #ff00006e);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

@@ -1,6 +1,6 @@
 import ImageItem from "5_shared/ui/ImageItem";
 import { Props } from "./model";
-import { Button, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SyntheticEvent, useState, useRef, useEffect } from "react";
 import style from "./ImageForm.module.scss";
@@ -11,12 +11,10 @@ import {
 	ExportedFilesArray,
 	TypedFile,
 	TypedImage,
-	uniqueID,
 	previewNameT,
 } from "5_shared/models";
 import createImage from "5_shared/api/storage/createImage";
 import useIsMounted from "5_shared/hooks/useIsMounted";
-import createImageID from "5_shared/helpers/createImageID";
 
 export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 	const [loading, setLoading] = useState<boolean>(false);
@@ -36,16 +34,12 @@ export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 	const handleDeleteItem = (e: SyntheticEvent, item: Image) => {
 		e.preventDefault();
 
-		// filesRef.current = filesRef.current.filter(
-		// 	(i: File, index) => index !== id
-		// );
 		setItems((prev: any) =>
 			prev.filter((i: Image, idx: number) => {
 				if (i.id !== item.id) {
 					return true;
 				} else {
 					filesRef.current.splice(idx, 1);
-					console.log("delete", filesRef.current);
 					return false;
 				}
 			})
@@ -66,20 +60,7 @@ export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 
 		const promises: Promise<Image>[] = [];
 		const files: File[] = Array.from(target?.files);
-
-		console.log("selected files", files);
-
-		// const typedFiles: TypedFile[] = files.map((file) => {
-		// 	return {
-		// 		id: createImageID(file),
-		// 		...file,
-		// 	};
-		// });
-
-		// console.log("typedFiles", typedFiles);
-
 		const fileNames = filesRef.current.map((file) => file.name);
-		console.log("fileNames", fileNames);
 
 		if (!filesRef.current.length) {
 			filesRef.current = [...files] as TypedFile[];
@@ -96,14 +77,11 @@ export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 			});
 
 			if (!hasNewFile) {
-				console.log("NO NewFile");
 				setLoading(false);
 				triggerEnd();
 				return;
 			}
 		}
-
-		console.log("filesRef", filesRef.current);
 
 		for (let i = 0, l = files.length; i < l; i++) {
 			if (!fileNames.includes(files[i].name)) {
@@ -112,8 +90,6 @@ export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 
 					reader.onload = (e: ProgressEvent) => {
 						const fileTarget = e.target as FileReader;
-
-						console.log("fileTarget", fileTarget);
 						const base64res = fileTarget.result as ArrayBuffer;
 						const imageObj = createImage(files[i], base64res);
 						resolve(imageObj);
@@ -126,15 +102,12 @@ export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 
 		await Promise.all(promises).then((result) => {
 			setItems((prev: any) => {
-				console.log("promiseALL", result);
 				const merged: Image[] = [...prev, ...result];
 
 				// получение неповторяющихся items
 				const names: previewNameT[] = Array.from(
 					new Set(merged.map((item) => item.name))
 				);
-
-				console.log("names", names);
 
 				const uniqFiles = merged.filter((item: Image) => {
 					if (names.includes(item.name)) {
@@ -145,7 +118,6 @@ export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 					}
 				});
 
-				console.log("uniqFiles", uniqFiles);
 				return uniqFiles;
 			});
 			setLoading(false);
@@ -156,7 +128,7 @@ export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 
 	useEffect(() => {
 		if (isMounted() && !!returnImages) {
-			console.log("upd files", data?.length, filesRef.current);
+			// console.log("upd files", data?.length, filesRef.current);
 			returnImages(filesRef.current as FilesArray);
 		}
 	}, [items]);
@@ -239,9 +211,14 @@ export const ImageForm: React.FC<Props> = ({ data, returnImages }) => {
 					/>
 				</LoadingButton>
 				{items?.length > 0 && (
-					<Button variant="contained" color="error" onClick={handleClear}>
+					<LoadingButton
+						loading={loading}
+						variant="contained"
+						color="error"
+						onClick={handleClear}
+					>
 						Delete Images
-					</Button>
+					</LoadingButton>
 				)}
 			</Box>
 

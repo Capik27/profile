@@ -1,5 +1,5 @@
 import { Props } from "./model";
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SyntheticEvent, useRef, useState, useEffect, memo } from "react";
 import TextInput from "4_features/TextInput";
@@ -8,12 +8,21 @@ import uploadPost from "5_shared/api/firestore/uploadPost";
 import { FilesArray, Image, previewNameT } from "5_shared/models";
 import { changedData } from "5_shared/api/firestore/changePost/model";
 import changePost from "5_shared/api/firestore/changePost";
+import deletePost from "5_shared/api/firestore/deletePost";
+import { setUpdate } from "5_shared/store/postsSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { MAIN_ROUTE } from "5_shared/router/paths";
 
 const Editor: React.FC<Props> = ({ data }) => {
+	const [alert, setAlert] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
+	const currentData = useRef<FilesArray | Image[]>(data?.images || []);
 	const [files, setFiles] = useState<FilesArray | Image[]>(data?.images || []);
 	const [title, setTitle] = useState<string>(data?.title || "");
 	const [content, setContent] = useState<string>(data?.description || "");
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const handleTitleChange = (e: SyntheticEvent) => {
 		const value = (e.target as HTMLInputElement).value;
@@ -22,6 +31,25 @@ const Editor: React.FC<Props> = ({ data }) => {
 	const handleContentChange = (e: SyntheticEvent) => {
 		const value = (e.target as HTMLInputElement).value;
 		setContent(value);
+	};
+	const handleAlertClose = () => {
+		setAlert(false);
+	};
+	const getAlertMsg = () => {
+		const msg = `Post '${title}' successfully`;
+		return data ? msg + " modified" : msg + " created";
+	};
+	const alertMessage = getAlertMsg();
+
+	const handleDeletePost = () => {
+		setLoading(true);
+		deletePost(data?.id, currentData.current);
+		dispatch(setUpdate(true));
+		const timer = setTimeout(() => {
+			clearTimeout(timer);
+			setLoading(false);
+			navigate(MAIN_ROUTE);
+		}, 1000);
 	};
 
 	const handleSubmit = async () => {
@@ -34,48 +62,17 @@ const Editor: React.FC<Props> = ({ data }) => {
 				delete: [],
 			};
 
-			console.log("changedData", changedData);
+			const newFileNames: previewNameT[] = files.map(
+				(item: File | Image) => item.name
+			);
 
-			const onlyNewFiles: File[] = files.filter(
-				(item: File | Image) => item instanceof File
-			) as File[];
-
-			if (onlyNewFiles.length) {
-				// const dataFileNames: previewNameT[] = data.images.map(
-				// 	(item: File | Image) => item.name
-				// );
-				const newFileNames: previewNameT[] = files.map(
-					(item: File | Image) => item.name
-				);
-				// add new files
-				// onlyNewFiles.forEach((item: File) => {
-				// 	if (!dataFileNames.includes(item.name)) {
-				// 		changedData.add.push(item);
-				// 	}
-				// });
-				// delete files
-				data.images.forEach((item: Image) => {
-					if (!newFileNames.includes(item.name)) {
-						changedData.delete.push(item.name);
-					}
-				});
-			} else {
-				// no new files
-				// let orderChanged = false;
-				for (let i = 0; i < data.images.length; i++) {
-					if (data.images[i].name !== files[i].name) {
-						console.log("ORDER CHANGED", changedData.orderedFiles);
-						await changePost(data, title, content, changedData);
-						break;
-					}
+			currentData.current.forEach((item: Image | File) => {
+				if (!newFileNames.includes(item.name)) {
+					changedData.delete.push(item.name);
 				}
-				setLoading(false);
-				return;
-				// if (orderChanged) {
-				// 	// true
-				// }
-			}
-			console.log("changedData end", changedData);
+			});
+			currentData.current = [...files];
+
 			await changePost(data, title, content, changedData);
 		} else {
 			//create
@@ -84,42 +81,70 @@ const Editor: React.FC<Props> = ({ data }) => {
 			setContent("");
 			setFiles([]);
 		}
-
+		setAlert(true);
 		setLoading(false);
+		dispatch(setUpdate(true));
+		navigate(MAIN_ROUTE);
 	};
 
-	console.log("Editor RENDER");
-
 	return (
-		<Box style={{ display: "grid", justifyItems: "start" }}>
-			<TextInput
-				label="Title"
-				value={title}
-				onChange={handleTitleChange}
-				size="small"
-				margin="dense"
-			/>
-			<TextInput
-				label="Content"
-				value={content}
-				onChange={handleContentChange}
-				multiline
-				rows={3}
-				fullWidth
-				size="small"
-				margin="dense"
-			/>
-			<ImageForm data={files as Image[]} returnImages={setFiles} />
-			<LoadingButton
-				variant="contained"
-				loading={loading}
-				disabled={loading || !title || !content || !files.length}
-				onClick={handleSubmit}
-				style={{ justifySelf: "end" }}
+		<>
+			<Box style={{ display: "grid", justifyItems: "start" }}>
+				<TextInput
+					label="Title"
+					value={title}
+					onChange={handleTitleChange}
+					size="small"
+					margin="dense"
+				/>
+				<TextInput
+					label="Content"
+					value={content}
+					onChange={handleContentChange}
+					multiline
+					minRows={3}
+					fullWidth
+					size="small"
+					margin="dense"
+				/>
+				<ImageForm data={files as Image[]} returnImages={setFiles} />
+				<Box style={{ display: "flex", justifySelf: "end", gap: 8 }}>
+					{data && (
+						<LoadingButton
+							variant="contained"
+							color="error"
+							loading={loading}
+							disabled={loading}
+							onClick={handleDeletePost}
+						>
+							Delete post
+						</LoadingButton>
+					)}
+					<LoadingButton
+						variant="contained"
+						loading={loading}
+						disabled={loading || !title || !content || !files.length}
+						onClick={handleSubmit}
+					>
+						Submit
+					</LoadingButton>
+				</Box>
+			</Box>
+			<Snackbar
+				open={alert}
+				autoHideDuration={3000}
+				onClose={handleAlertClose}
+				anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
 			>
-				Submit
-			</LoadingButton>
-		</Box>
+				<Alert
+					onClose={handleAlertClose}
+					severity="success"
+					sx={{ backgroundColor: "greenligth", border: "1px solid #00000050" }}
+				>
+					{alertMessage}
+				</Alert>
+			</Snackbar>
+		</>
 	);
 };
 
