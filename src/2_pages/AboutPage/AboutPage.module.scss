@@ -5,7 +5,6 @@
 }
 .navbar_wrapper {
     display: flex;
-    margin-bottom: 16px;
     height: 48px;
 
     @media (max-width: 900px) {
@@ -77,15 +76,6 @@
 
     &_item {
         flex-basis: 100%;
-    }
-}
-
-.links_3x {
-    @extend %flex;
-    width: 100%;
-
-    .links_item {
-        flex-basis: 33.33%;
     }
 }
 

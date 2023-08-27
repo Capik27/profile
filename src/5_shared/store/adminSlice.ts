@@ -1,5 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const storageWorker = (state: boolean) => {
+	if (state) {
+		sessionStorage.isAdmin = true;
+	} else {
+		delete sessionStorage.isAdmin;
+	}
+};
+
 export type adminState = {
 	isAdmin: boolean;
 };
@@ -13,11 +21,17 @@ const adminSlice = createSlice({
 	initialState,
 	reducers: {
 		toggleAdminMode(state) {
-			sessionStorage.isAdmin = !state.isAdmin;
 			state.isAdmin = !state.isAdmin;
+			storageWorker(state.isAdmin);
+		},
+		setAdminMode(state, { payload }) {
+			if (state.isAdmin !== payload) {
+				state.isAdmin = payload;
+				storageWorker(state.isAdmin);
+			}
 		},
 	},
 });
 
 export default adminSlice.reducer;
-export const { toggleAdminMode } = adminSlice.actions;
+export const { toggleAdminMode, setAdminMode } = adminSlice.actions;

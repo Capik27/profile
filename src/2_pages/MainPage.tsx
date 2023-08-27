@@ -17,9 +17,11 @@ const MainPage: React.FC = () => {
 	const fetchPosts = () => {
 		downloadAllPosts().then((result) => {
 			if (result) {
-				setData(result);
+				const reversed = result.reverse();
+				// console.log("REQUEST DATA", result);
+				setData(reversed);
 				dispatch(setUpdate(false));
-				dispatch(setDataPosts(result));
+				dispatch(setDataPosts(reversed));
 			}
 		});
 	};

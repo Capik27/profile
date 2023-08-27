@@ -1,6 +1,5 @@
 import { Post } from "5_shared/models";
 import { createSlice } from "@reduxjs/toolkit";
-// import { DocumentData } from "firebase/firestore";
 
 export type State = {
 	posts: Post[];
@@ -20,7 +19,6 @@ const postsSlice = createSlice({
 			state.posts = payload as Post[];
 		},
 		setUpdate(state, { payload }) {
-			console.log("setUpdate", payload);
 			state.update = payload;
 		},
 	},

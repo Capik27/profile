@@ -1,10 +1,11 @@
-import { Props } from "./model";
+import { CONFIRM_DELAY, Props } from "./model";
 import { Alert, Box, Snackbar } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SyntheticEvent, useRef, useState, useEffect, memo } from "react";
 import TextInput from "4_features/TextInput";
 import ImageForm from "4_features/ImageForm";
 import uploadPost from "5_shared/api/firestore/uploadPost";
+import { Portal } from "@mui/base";
 import { FilesArray, Image, previewNameT } from "5_shared/models";
 import { changedData } from "5_shared/api/firestore/changePost/model";
 import changePost from "5_shared/api/firestore/changePost";
@@ -17,6 +18,7 @@ import { MAIN_ROUTE } from "5_shared/router/paths";
 const Editor: React.FC<Props> = ({ data }) => {
 	const [alert, setAlert] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [del, setDel] = useState<number>(0);
 	const currentData = useRef<FilesArray | Image[]>(data?.images || []);
 	const [files, setFiles] = useState<FilesArray | Image[]>(data?.images || []);
 	const [title, setTitle] = useState<string>(data?.title || "");
@@ -36,20 +38,31 @@ const Editor: React.FC<Props> = ({ data }) => {
 		setAlert(false);
 	};
 	const getAlertMsg = () => {
+		let result;
 		const msg = `Post '${title}' successfully`;
-		return data ? msg + " modified" : msg + " created";
+		if (del) {
+			result = msg + " deleted";
+		} else {
+			result = data ? msg + " modified" : msg + " created";
+		}
+		return result;
 	};
-	const alertMessage = getAlertMsg();
 
 	const handleDeletePost = () => {
-		setLoading(true);
-		deletePost(data?.id, currentData.current);
-		dispatch(setUpdate(true));
-		const timer = setTimeout(() => {
-			clearTimeout(timer);
-			setLoading(false);
-			navigate(MAIN_ROUTE);
-		}, 1000);
+		if (del) {
+			setLoading(true);
+			deletePost(data?.id, currentData.current);
+			dispatch(setUpdate(true));
+			const timer = setTimeout(() => {
+				clearTimeout(timer);
+				setAlert(true);
+				setLoading(false);
+				setDel(0);
+				navigate(MAIN_ROUTE);
+			}, 1000);
+		} else {
+			setDel(CONFIRM_DELAY);
+		}
 	};
 
 	const handleSubmit = async () => {
@@ -77,6 +90,7 @@ const Editor: React.FC<Props> = ({ data }) => {
 		} else {
 			//create
 			await uploadPost(title, content, files);
+
 			setTitle("");
 			setContent("");
 			setFiles([]);
@@ -86,6 +100,15 @@ const Editor: React.FC<Props> = ({ data }) => {
 		dispatch(setUpdate(true));
 		navigate(MAIN_ROUTE);
 	};
+
+	useEffect(() => {
+		if (del > 0) {
+			const timer = setTimeout(() => {
+				setDel((prev) => prev - 1);
+				clearTimeout(timer);
+			}, 1000);
+		}
+	}, [del]);
 
 	return (
 		<>
@@ -111,39 +134,45 @@ const Editor: React.FC<Props> = ({ data }) => {
 				<Box style={{ display: "flex", justifySelf: "end", gap: 8 }}>
 					{data && (
 						<LoadingButton
+							sx={{ width: 150, minWidth: 50 }}
 							variant="contained"
-							color="error"
-							loading={loading}
+							color={del ? "warning" : "error"}
+							loading={loading && !!del}
 							disabled={loading}
 							onClick={handleDeletePost}
 						>
-							Delete post
+							{del ? `Confirm? ${del}` : "Delete post"}
 						</LoadingButton>
 					)}
 					<LoadingButton
 						variant="contained"
 						loading={loading}
-						disabled={loading || !title || !content || !files.length}
+						disabled={!!del || loading || !title || !content || !files.length}
 						onClick={handleSubmit}
 					>
 						Submit
 					</LoadingButton>
 				</Box>
 			</Box>
-			<Snackbar
-				open={alert}
-				autoHideDuration={3000}
-				onClose={handleAlertClose}
-				anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-			>
-				<Alert
+			<Portal>
+				<Snackbar
+					open={alert}
+					autoHideDuration={3000}
 					onClose={handleAlertClose}
-					severity="success"
-					sx={{ backgroundColor: "greenligth", border: "1px solid #00000050" }}
+					anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
 				>
-					{alertMessage}
-				</Alert>
-			</Snackbar>
+					<Alert
+						onClose={handleAlertClose}
+						severity="success"
+						sx={{
+							backgroundColor: "greenligth",
+							border: "1px solid #00000050",
+						}}
+					>
+						{getAlertMsg()}
+					</Alert>
+				</Snackbar>
+			</Portal>
 		</>
 	);
 };
