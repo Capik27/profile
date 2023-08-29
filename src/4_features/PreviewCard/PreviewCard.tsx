@@ -7,7 +7,7 @@ import { Button, CardActions } from "@mui/material";
 import style from "./PreviewCard.module.scss";
 import useAdmin from "5_shared/hooks/useAdmin";
 import { Link } from "react-router-dom";
-import { EDIT_ROUTE } from "5_shared/router/paths";
+import { EDIT_ROUTE, POST_ROUTE } from "5_shared/router/paths";
 
 export const PreviewCard: React.FC<Props> = ({ data }) => {
 	const isAdmin = useAdmin();
@@ -40,7 +40,9 @@ export const PreviewCard: React.FC<Props> = ({ data }) => {
 				</CardContent>
 
 				<CardActions>
-					<Button>More</Button>
+					<Link to={`${POST_ROUTE}/${data.id}`}>
+						<Button>More</Button>
+					</Link>
 					{isAdmin && (
 						<Link to={`${EDIT_ROUTE}/${data.id}`}>
 							<Button>Edit</Button>

@@ -3,7 +3,8 @@ import downloadAllPosts from "5_shared/api/firestore/download/allPosts";
 import useGetPosts from "5_shared/hooks/useGetPosts";
 import useUpdatePosts from "5_shared/hooks/useUpdatePosts";
 import { setDataPosts, setUpdate } from "5_shared/store/postsSlice";
-import { Box } from "@mui/material";
+import LoaderCircle from "5_shared/ui/LoaderCircle";
+import { Box, CircularProgress } from "@mui/material";
 import { DocumentData } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -32,7 +33,7 @@ const MainPage: React.FC = () => {
 		}
 	}, [update]);
 
-	if (!data.length) return <Box>Loading...</Box>;
+	if (!data.length) return <LoaderCircle />;
 
 	console.log("MAIN RERENDER");
 
