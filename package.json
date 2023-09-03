@@ -1,5 +1,6 @@
 {
   "name": "profile",
+  "homepage": "https://capik27.github.io/profile/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,7 +8,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.13.7",
     "@mui/lab": "^5.0.0-alpha.137",
-    "@mui/material": "^5.13.7",
+    "@mui/material": "^5.14.7",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -17,8 +18,8 @@
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "deep-equal": "^2.2.2",
-    "firebase": "^10.0.0",
-    "framer-motion": "^10.16.1",
+    "firebase": "^10.3.1",
+    "framer-motion": "^10.16.2",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
@@ -30,6 +31,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -52,5 +55,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.0.0"
   }
 }
