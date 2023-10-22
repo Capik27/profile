@@ -1,4 +1,4 @@
-const SITE_NAME = "profile";
+const SITE_NAME = "";
 
 const MAIN_ROUTE = SITE_NAME + "/";
 const CREATE_ROUTE = MAIN_ROUTE + "create";
