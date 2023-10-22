@@ -1,0 +1,48 @@
+
+$color-swiper-buttons: antiquewhite;
+
+// .swiper{
+//     max-width: 700px;
+// }
+
+// .swiper-wrapper{
+//     max-width: 700px;
+// }
+
+.swiper-slide{
+    max-height: 500px;
+    width: 100%;
+    height: auto;
+    
+    display: flex;
+    align-items: center;
+    border: 1px solid rgb(196, 196, 196);
+    border-radius: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    &_img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &-active{
+        width: 100%;
+        
+    }
+}
+
+.swiper-button-next, .swiper-button-prev {
+    color: $color-swiper-buttons;
+}
+.swiper-pagination-bullet{
+    border: 2px solid $color-swiper-buttons;
+
+    &-active{
+        background-color: $color-swiper-buttons;
+    }
+}
+.swiper-pagination-horizontal{
+    margin-bottom: 0px;
+}

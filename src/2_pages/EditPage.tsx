@@ -5,16 +5,16 @@ import { ERROR_ROUTE } from "5_shared/router/paths";
 import { Navigate, useParams } from "react-router-dom";
 
 const EditPage: React.FC = () => {
-	const { id } = useParams();
-	const post = useFindPost(id ?? "");
+  const { id } = useParams();
+  const post = useFindPost(id ?? "");
 
-	if (!post) return <Navigate to={ERROR_ROUTE} replace={true} />;
+  if (!post) return <Navigate to={ERROR_ROUTE} replace={true} />;
 
-	return (
-		<>
-			<Editor data={post} />
-		</>
-	);
+  return (
+    <div className="max-width">
+      <Editor data={post} />
+    </div>
+  );
 };
 
 export default EditPage;
