@@ -11,9 +11,9 @@ function App() {
   return (
     <Layout>
       <NavBar />
-      <section id="content">
+      <main id="content">
         <AppRouter />
-      </section>
+      </main>
     </Layout>
   );
 }

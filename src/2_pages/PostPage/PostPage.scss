@@ -1,13 +1,9 @@
 
 $color-swiper-buttons: antiquewhite;
 
-// .swiper{
-//     max-width: 700px;
-// }
-
-// .swiper-wrapper{
-//     max-width: 700px;
-// }
+.swiper-container{
+    margin-bottom: 8px;
+}
 
 .swiper-slide{
     max-height: 500px;
@@ -34,15 +30,41 @@ $color-swiper-buttons: antiquewhite;
 }
 
 .swiper-button-next, .swiper-button-prev {
-    color: $color-swiper-buttons;
+    -webkit-text-stroke: 0.5px #000;
+    -webkit-text-fill-color: $color-swiper-buttons;
 }
 .swiper-pagination-bullet{
     border: 2px solid $color-swiper-buttons;
 
     &-active{
         background-color: $color-swiper-buttons;
+        border-color: #303030;
     }
 }
 .swiper-pagination-horizontal{
     margin-bottom: 0px;
+}
+
+.post-title {
+    margin: 0 0 4px;
+    text-align: center;
+    letter-spacing: 1px;
+    font-weight: 900;
+    //line-height: 28px;
+    // color: #1f10101a;
+    -webkit-text-stroke: 1px #000000;
+
+    background: $color-swiper-buttons;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.post-description{
+    margin: 0;
+    font-size: 16px;
+    line-height: 16px;
+    word-break: break-word;
+	white-space: pre-wrap;
+    // font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    // "Droid Sans", "Helvetica Neue", sans-serif;
 }

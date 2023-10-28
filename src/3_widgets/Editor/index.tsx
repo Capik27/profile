@@ -121,7 +121,7 @@ const Editor: React.FC<Props> = ({ data }) => {
           margin="dense"
         />
         <TextInput
-          label="Content"
+          label="Content. Separator is ;"
           value={content}
           onChange={handleContentChange}
           multiline
@@ -134,7 +134,7 @@ const Editor: React.FC<Props> = ({ data }) => {
         <Box style={{ display: "flex", justifySelf: "end", gap: 8 }}>
           {data && (
             <LoadingButton
-              sx={{ width: 150, minWidth: 50 }}
+              sx={{ width: 150 }}
               variant="contained"
               color={del ? "warning" : "error"}
               loading={loading && !!del}
