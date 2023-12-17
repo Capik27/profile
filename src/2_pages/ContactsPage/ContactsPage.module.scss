@@ -1,102 +1,22 @@
-%flex {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-.navbar_wrapper {
-    display: flex;
-    height: 48px;
-
-    @media (max-width: 900px) {
-        .title {
-            position: absolute;
-            color: #0000000e;
-            -webkit-text-stroke: 1px #00000044;
-            left: 8px;
-            top: 11px;
-        }
-        .navbar {
-            justify-content: end;
-        }
-    }
-    @media (max-width: 497px) {
-        height: 93px;
-
-        .navbar {
-            display: none;
-        }
-        .links {
-            width: 100%;
-            justify-content: center;
-
-            &_item {
-                flex-basis: 50%;
-            }
-        }
-        .navbar_mobile {
-            display: flex;
-            flex-direction: column;
-        }
-        .title {
-            position: static;
-        }
-    }
+.title{
+    text-align: center;
 }
 
-%navbar {
-    z-index: 999;
-    @extend %flex;
-    position: fixed;
-    left: 4px;
-    width: calc(100% - 24px);
-    justify-content: space-between;
-    padding: 6px 8px;
-    background-color: #ffffff;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-
-    overflow: hidden;
-
-    box-shadow:
-        0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-        0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-        0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-}
-.navbar {
-    @extend %navbar;
-
-    &_mobile {
-        @extend %navbar;
-        display: none;
-    }
-}
-
-.links {
-    @extend %flex;
-
-    &_item {
-        flex-basis: 100%;
-    }
-}
-
-.title_wrapper {
-    width: 100%;
-    height: 50%;
-    position: absolute;
-    top: 0;
+.links_container{
     display: flex;
     justify-content: center;
-    align-items: center;
+    gap:8px;
+}
+.link {
+    text-decoration: none;
+    color: #00000098;
+
+    &:hover{
+        color: #000000;
+    }
 }
 
-.title {
-    margin: 0px;
-    letter-spacing: 1px;
-    font-size: 26px;
-    line-height: 26px;
-    font-family: Arial, sans-serif;
-    font-weight: 900;
-    color: #0000001a;
-    -webkit-text-stroke: 1px #000000bb;
-    white-space: nowrap;
+.icon{
+    width: 96px;
+    height: 96px;
 }
